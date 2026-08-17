@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <title>{{ page.title }}</title>
+  <link rel="stylesheet" href="{{ "/assets/css/style.css" | relative_url }}">
+  {{ content_for_header }}
+</head>
+<body>
+
+  <main>
+    {{ content }}
+  </main>
+
+  <!-- Incolla lo script JavaScript qui prima della chiusura del body -->
+  <script src="https://cdn.jsdelivr.net/npm/mql@latest/dist/mql.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const cards = document.querySelectorAll('a.medium-card');
+      cards.forEach(async (card) => {
+        const targetUrl = card.href;
+        try {
+          const response = await fetch(`https://api.microlink.io?url=${encodeURIComponent(targetUrl)}`);
+          const { data } = await response.json();
+          if (data) {
+            const title = data.title || targetUrl;
+            const description = data.description || '';
+            const image = data.image ? data.image.url : (data.logo ? data.logo.url : '');
+            const publisher = data.publisher || new URL(targetUrl).hostname;
+
+            card.innerHTML = `
+              <div class="card-content">
+                <div class="card-title">${title}</div>
+                <div class="card-description">${description}</div>
+                <div class="card-publisher">${publisher}</div>
+              </div>
+              ${image ? `<img src="${image}" class="card-image" alt="Preview">` : ''}
+            `;
+            card.classList.add('medium-card-rendered');
+          }
+        } catch (err) {
+          console.error("Errore preview:", err);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
