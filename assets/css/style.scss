@@ -1,9 +1,13 @@
-/* Nasconde i Tag a fine articolo */
+---
+---
+
+@import "main";
+
+/* Regole personalizzate */
 .post-tags {
   display: none !important;
 }
 
-/* Nasconde la sezione Further Reading (articoli correlati) */
 #related-posts {
   display: none !important;
 }
