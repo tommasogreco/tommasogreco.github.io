@@ -1,6 +1,6 @@
 ---
 title: Book Store - HackingHub
-date: 2026-09-23 00:00:00 +0000
+date: 2026-10-17 00:00:00 +0000
 categories:
   - Writeups
   - HackingHub
@@ -12,9 +12,11 @@ image:
   path: assets/img/blogs/mr-robots/mr-robots-covers.png
   alt: Mr. Robot TryHackMe Writeup
 ---
-### Intro.
+### INTRO
 Difficulty: Hard;
+
 Released: Apr 1st, 2024
+
 Authors: [JohnHammond](https://app.hackinghub.io/p/JohnHammond)
 
 Room URL: [https://app.hackinghub.io/hubs/book-store](https://app.hackinghub.io/hubs/book-store)
@@ -25,7 +27,7 @@ This is the first machine I've analyzed on the HackingHub platform. It was a tru
 > The HackingHub labs have a link whose subdomain changes every hour. In my report, I referred to the subdomain as “$variable” to avoid having to change it all the time. 
 
 ---
-### ==🟢RESONNAISSANCE==
+### RESONNAISSANCE
 
 I performed a host scan with "nmap" and I found a web server:
 
@@ -124,7 +126,7 @@ At this moment, I have be honest, I thought about how to find the most advanced 
 > [!NOTE] Note
 > Is necessary insert "X-Forwarded-For: localhost" in each new request
 
-### ==🟠EXPLOITATION==
+### EXPLOITATION
 
 #### XXE Injection.
 
@@ -213,7 +215,8 @@ If other fields were also vulnerable? For example: to XSS injection? I might obt
 These will be the phase of test:
 1. I test fields of the book 7 "Test Book A". Field "description" is XSS vulnerable.
 2. Insert my XXS payload: 
-```
+
+```xml
 <book>
     <title>Test Book A</title>
     <author>Alan Turing</author>
@@ -223,6 +226,7 @@ These will be the phase of test:
     <coverImageUrl>http://example.com/cover7.jpg</coverImageUrl>
 </book>
 ```
+
 3. I requested the review of book 7... modifying the previously discovered vulnerablefield of book 8:
 `<coverImageUrl>http://api/categories/2d340d76-cc36-4554-9d40-577e164603dd/books/7/submit-ticket-request-for-review</coverImageUrl>`
 4. I used a listener in my host for receive the cookie.
@@ -237,17 +241,17 @@ With a session cookie I tried to access on `/login`, on `/register`; in the end 
 
 The dashboard looked like this:
 
-! [Add new book dashboard](https://tommasogreco.github.io/assets/img/blogs/bookstore/www-store8.webp)
+! [Add new book dashboard](https://tommasogreco.github.io/assets/img/blogs/bookstore/www-store10.webp)
 
 #### SQLi injection
 
 I captured a new book request on burpsuite and I received an error:
 
-![[WriteUps-1791803035272.webp|1149]]
+! [Add new book burpsuite request](https://tommasogreco.github.io/assets/img/blogs/bookstore/burp6.webp)
 
 I tried to insert a backticks in some access input:
 
-![[WriteUps-1791803552941.webp|1151]]
+! [Backticks test](https://tommasogreco.github.io/assets/img/blogs/bookstore/burp7.webp)
 
 *...Is there anybody out there?*
 Yes there are!!! MySQL... error-based injection.
@@ -273,13 +277,12 @@ Parameter: title (POST)
 
 Also time-based, boolean-based, other input injection... Anyway...
 
-
-![[WriteUps-1791834116548.webp|1156]]
+! [Sqlmap file read](https://tommasogreco.github.io/assets/img/blogs/bookstore/sqlmap.webp)
 
 When I query the database, I read the /etc/passwd file and the /root/.ssh/id_rsa file.
 I use "id_rsa" to run command from the dashboard:
 
-![[WriteUps-1791843511090.webp]]
+! [Database debug mode](https://tommasogreco.github.io/assets/img/blogs/bookstore/burp11.webp)
 
 One file caught my attention:
 
@@ -352,7 +355,7 @@ Jackpot!!!! I found the teasure :D!
 I am running commands from the “api” container to access information contained in a directory that has permissions allowing “www-admin” to access it.
 The flag file is a symbolic link to /root/flag.txt. If I try to read it with `cat`, I obviously get nowhere because that file belongs to root and we don't have root privileges.
 
-### PRIVILEGE ESCALATION.
+### PRIVILEGE ESCALATION
 
 And who's the trusted friend in times of need? It's him, of course: `sudo -l`
 
