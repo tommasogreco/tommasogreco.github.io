@@ -97,8 +97,8 @@ Endpoint found: `/login, /register, /logout, /categories, /dashboard, /authors.`
 My next step was clicking on the found endpoint. On `/categories` endpoint I noticed that each category contain a list of books.
 Total 7 categories:
 
- [Book Store Categories](https://tommasogreco.github.io/assets/img/blogs/bookstore/www-store1.webp)
- [Categories in burpsuite](https://tommasogreco.github.io/assets/img/blogs/bookstore/www-store2.webp)
+ ![Book Store Categories](https://tommasogreco.github.io/assets/img/blogs/bookstore/www-store1.webp)
+ ![Categories in burpsuite](https://tommasogreco.github.io/assets/img/blogs/bookstore/www-store2.webp)
 
 Browsing `/sitemap.xml` link:
 
