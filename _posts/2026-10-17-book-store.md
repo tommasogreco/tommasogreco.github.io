@@ -1,6 +1,6 @@
 ---
 title: Book Store - HackingHub
-date: 2026-09-23 00:00:00 +0000
+date: 2026-10-18 00:00:00 +0000
 categories:
   - Writeups
   - HackingHub
@@ -10,7 +10,7 @@ tags:
   - post-exploitation
 image:
   path: assets/img/blogs/mr-robots/mr-robots-covers.png
-  alt: Mr. Robot TryHackMe Writeup
+  alt: Book Store Writeup
 ---
 Difficulty: Hard;
 Released: Apr 1st, 2024
