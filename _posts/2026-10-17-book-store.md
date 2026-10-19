@@ -8,20 +8,20 @@ tags:
   - enumeration
   - eploitation
   - post-exploitation
+  - sqlmap
+  - python3
+  - XXE injection
+  - XSS injection
+  - SSRF injection
+  - SQLi
 image:
-  path: assets/img/blogs/mr-robots/mr-robots-covers.png
-  alt: Mr. Robot TryHackMe Writeup
+  path: assets/img/blogs/bookstore/bookstore.webp
+  alt: Book Store - HackingHub Writeup
 ---
 ### INTRO
-Difficulty: Hard;
-
-Released: Apr 1st, 2024
-
-Authors: [JohnHammond](https://app.hackinghub.io/p/JohnHammond)
+This is the first machine I've analyzed on the HackingHub platform. It was a truly rewarding experience that led me to reflect and seek solutions - much more so than for other LABs.
 
 Room URL: [https://app.hackinghub.io/hubs/book-store](https://app.hackinghub.io/hubs/book-store)
-
-This is the first machine I've analyzed on the HackingHub platform. It was a truly rewarding experience that led me to reflect and seek solutions - much more so than for other LABs.
 
 > [!NOTE] P.S: 
 > The HackingHub labs have a link whose subdomain changes every hour. In my report, I referred to the subdomain as “$variable” to avoid having to change it all the time. 
@@ -98,25 +98,26 @@ My next step was clicking on the found endpoint. On `/categories` endpoint I not
 Total 7 categories:
 
  ![Book Store Categories](https://tommasogreco.github.io/assets/img/blogs/bookstore/www-store1.webp)
+ 
  ![Categories in burpsuite](https://tommasogreco.github.io/assets/img/blogs/bookstore/www-store2.webp)
 
 Browsing `/sitemap.xml` link:
 
- [Sitemap Categories](https://tommasogreco.github.io/assets/img/blogs/bookstore/www-store3.webp)
+ ![Sitemap Categories](https://tommasogreco.github.io/assets/img/blogs/bookstore/www-store3.webp)
 
 I need to find the category listed in the /sitemap.xml file, not in the “Categories” tab.
 To do this, I'm clicking on all seven categories a  
 To do this, I click on all seven known categories and check in “Burp Suite” to see which category is left to open.
 Every link associated with a category returned a consistent result except one: number 2.
 
- [Burpsuite hidden Categories](https://tommasogreco.github.io/assets/img/blogs/bookstore/burp1.webp)
+ ![Burpsuite hidden Categories](https://tommasogreco.github.io/assets/img/blogs/bookstore/burp1.webp)
 
 At this moment, I have be honest, I thought about how to find the most advanced technique of this world for send a request like a local staff from a specific geographic location....
 ... but, the simply response is the best! I took the error message and searched on internet: "<< Hey man... use http header X-Forwarded-For! essential for geolocation!"
 
- [Burpsuite request with x-forwarded-for](https://tommasogreco.github.io/assets/img/blogs/bookstore/burp2.webp)
+ ![Burpsuite request with x-forwarded-for](https://tommasogreco.github.io/assets/img/blogs/bookstore/burp2.webp)
 
- [Hidden books](https://tommasogreco.github.io/assets/img/blogs/bookstore/www-store4.webp)
+ ![Hidden books](https://tommasogreco.github.io/assets/img/blogs/bookstore/www-store4.webp)
 
  [Book A with XML format](https://tommasogreco.github.io/assets/img/blogs/bookstore/www-store5.webp)
 
@@ -141,14 +142,14 @@ http://$variable$.ctfio.com/categories/2d340d76-cc36-4554-9d40-577e164603dd/book
 I gather that it is possible a XXE injection attack.
 I spent a lot of time to test varius XXE attack, but none of this are successful...
 
- [XXE injection](https://tommasogreco.github.io/assets/img/blogs/bookstore/burp3.webp)
+ ![XXE injection](https://tommasogreco.github.io/assets/img/blogs/bookstore/burp3.webp)
 
 Why? Because I can't read the file `/etc/passwd`. I don't have the permess to read file! It is elementary Watson. My blunder :-(
 I tried reading another configuration file. I had success with the /etc/hosts file.
 
- [XXE injection success](https://tommasogreco.github.io/assets/img/blogs/bookstore/burp4.webp)
+ ![XXE injection success](https://tommasogreco.github.io/assets/img/blogs/bookstore/burp4.webp)
 
- [XXE reflected on book page](https://tommasogreco.github.io/assets/img/blogs/bookstore/www-store6.webp)
+ ![XXE reflected on book page](https://tommasogreco.github.io/assets/img/blogs/bookstore/www-store6.webp)
 
 ```
 127.0.0.1	localhost
@@ -165,7 +166,7 @@ There are 3 internal API: `www, api and db`
 
 #### SSRF in the XML field. 
 
- [Exfil swagger.json](https://tommasogreco.github.io/assets/img/blogs/bookstore/burp5.webp)
+ ![Exfil swagger.json](https://tommasogreco.github.io/assets/img/blogs/bookstore/burp5.webp)
 
 > [!NOTE] Note
 > I found swagger.json fuzzing
@@ -174,7 +175,7 @@ I try a SSRF attack in the field of the XML: `<coverImageUrl>http://FUZZ1/FUZZ2<
 I obtain the endpoint for the `swagger.json` file.
 The swagger file was encoded in base64.
 
- [Cookie session in base64 encode](https://tommasogreco.github.io/assets/img/blogs/bookstore/www-store7.webp)
+ ![Cookie session in base64 encode](https://tommasogreco.github.io/assets/img/blogs/bookstore/www-store7.webp)
 
 Right click on broken image and copy the `data:image/png;base64,eyJzd2FnZ2VyIjogIjIu [...]`
 Decode this data.
@@ -245,27 +246,27 @@ These will be the phase of test:
 `<coverImageUrl>http://api/categories/2d340d76-cc36-4554-9d40-577e164603dd/books/7/submit-ticket-request-for-review</coverImageUrl>`
 4. I used a listener in my host for receive the cookie.
 
- [Cookie Session](https://tommasogreco.github.io/assets/img/blogs/bookstore/cookie.webp)
+ ![Cookie Session](https://tommasogreco.github.io/assets/img/blogs/bookstore/cookie.webp)
 
 > In XSS substitute "<" with "&lt;" and  ">" with "&gt;"
 
 With a session cookie I tried to access on `/login`, on `/register`; in the end I finally access on `/dashboard`:
 
- [Into the dashboard](https://tommasogreco.github.io/assets/img/blogs/bookstore/dash.webp)
+ ![Into the dashboard](https://tommasogreco.github.io/assets/img/blogs/bookstore/dash.webp)
 
 The dashboard looked like this:
 
- [Add new book dashboard](https://tommasogreco.github.io/assets/img/blogs/bookstore/www-store10.webp)
+ ![Add new book dashboard](https://tommasogreco.github.io/assets/img/blogs/bookstore/www-store10.webp)
 
 #### SQLi injection
 
 I captured a new book request on burpsuite and I received an error:
 
- [Add new book burpsuite request](https://tommasogreco.github.io/assets/img/blogs/bookstore/burp6.webp)
+ ![Add new book burpsuite request](https://tommasogreco.github.io/assets/img/blogs/bookstore/burp6.webp)
 
 I tried to insert a backticks in some access input:
 
- [Backticks test](https://tommasogreco.github.io/assets/img/blogs/bookstore/burp7.webp)
+ ![Backticks test](https://tommasogreco.github.io/assets/img/blogs/bookstore/burp7.webp)
 
 *...Is there anybody out there?*
 Yes there are!!! MySQL... error-based injection.
@@ -291,12 +292,12 @@ Parameter: title (POST)
 
 Also time-based, boolean-based, other input injection... Anyway...
 
- [Sqlmap file read](https://tommasogreco.github.io/assets/img/blogs/bookstore/sqlmap.webp)
+ ![Sqlmap file read](https://tommasogreco.github.io/assets/img/blogs/bookstore/sqlmap.webp)
 
 When I query the database, I read the /etc/passwd file and the /root/.ssh/id_rsa file.
 I use "id_rsa" to run command from the dashboard:
 
- [Database debug mode](https://tommasogreco.github.io/assets/img/blogs/bookstore/burp11.webp)
+ ![Database debug mode](https://tommasogreco.github.io/assets/img/blogs/bookstore/burp11.webp)
 
 One file caught my attention:
 
