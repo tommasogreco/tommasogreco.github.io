@@ -297,7 +297,7 @@ Also time-based, boolean-based, other input injection... Anyway...
 When I query the database, I read the /etc/passwd file and the /root/.ssh/id_rsa file.
 I use "id_rsa" to run command from the dashboard:
 
- ![Database debug mode](https://tommasogreco.github.io/assets/img/blogs/bookstore/burp11.webp)
+ ![Database debug mode](https://tommasogreco.github.io/assets/img/blogs/bookstore/www-store11.webp)
 
 One file caught my attention:
 
