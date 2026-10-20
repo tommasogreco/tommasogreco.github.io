@@ -90,8 +90,11 @@ authors                 [Status: 200, Size: 3773, Words: 1221, Lines: 94, Durati
 ```
 
 Summary:
+
 `80/tcp   open     http    Werkzeug httpd 3.1.3 (Python 3.9.20)`
+
 File found: `/sitemap.xml`
+
 Endpoint found: `/login, /register, /logout, /categories, /dashboard, /authors.`
 
 My next step was clicking on the found endpoint. On `/categories` endpoint I noticed that each category contain a list of books.
