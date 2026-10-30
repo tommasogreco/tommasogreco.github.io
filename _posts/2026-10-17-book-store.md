@@ -199,17 +199,6 @@ These are all the endpoints obtain from decode swagger file:
 | /other/debug-exec                                                            | OPTIONS, POST     |
 ```
 
-| Endpoint                                                                     | Metodo            |
-| ---------------------------------------------------------------------------- | ----------------- |
-| `/authors/`                                                                  | GET               |
-| `/books/`                                                                    | GET               |
-| `/categories/`                                                               | GET               |
-| `/categories/{category_id}`                                                  | GET               |
-| `/categories/{category_id}/books`                                            | GET               |
-| `/categories/{category_id}/books/{book_id}/details`                          | GET               |
-| `/categories/{category_id}/books/{book_id}/edit`                             | **POST**          |
-| `/categories/{category_id}/books/{book_id}/submit-ticket-request-for-review` | GET               |
-| `/other/debug-exec`                                                          | OPTIONS, **POST** |
 This...
 `/categories/{category_id}/books/{book_id}/submit-ticket-request-for-review` 
 ...appears interesting! 
